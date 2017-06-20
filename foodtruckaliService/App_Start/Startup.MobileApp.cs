@@ -9,6 +9,7 @@ using Microsoft.Azure.Mobile.Server.Config;
 using foodtruckaliService.DataObjects;
 using foodtruckaliService.Models;
 using Owin;
+using foodtruckaliService.Controllers;
 
 namespace foodtruckaliService
 {
@@ -53,15 +54,15 @@ namespace foodtruckaliService
     {
         protected override void Seed(foodtruckaliContext context)
         {
-            List<TodoItem> todoItems = new List<TodoItem>
+            List<FoodTruck> todoItems = new List<FoodTruck>
             {
-                new TodoItem { Id = Guid.NewGuid().ToString(), Text = "First item", Complete = false },
-                new TodoItem { Id = Guid.NewGuid().ToString(), Text = "Second item", Complete = false },
+                new FoodTruck { Id = Guid.NewGuid().ToString(), Name = "First item", IsAvailable = false },
+                new FoodTruck { Id = Guid.NewGuid().ToString(), Name = "Second item", IsAvailable = false },
             };
 
-            foreach (TodoItem todoItem in todoItems)
+            foreach (FoodTruck todoItem in todoItems)
             {
-                context.Set<TodoItem>().Add(todoItem);
+                context.Set<FoodTruck>().Add(todoItem);
             }
 
             base.Seed(context);
