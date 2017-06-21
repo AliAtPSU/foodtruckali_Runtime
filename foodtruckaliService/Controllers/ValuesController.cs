@@ -11,7 +11,7 @@ namespace foodtruckaliService.Controllers
     public class ValuesController : ApiController
     {
         // GET api/values
-        public IHttpActionResult Get()
+        public string Get()
         {
             MobileAppSettingsDictionary settings = this.Configuration.GetMobileAppSettingsProvider().GetMobileAppSettings();
             ITraceWriter traceWriter = this.Configuration.Services.GetTraceWriter();
@@ -20,13 +20,12 @@ namespace foodtruckaliService.Controllers
             string greeting = "Hello from " + host;
             
             traceWriter.Info(greeting);
-            return Ok(greeting);
+            return greeting;
         }
 
         // POST api/values
         public string Post()
         {
-            
             return "Hello World!";
         }
     }
