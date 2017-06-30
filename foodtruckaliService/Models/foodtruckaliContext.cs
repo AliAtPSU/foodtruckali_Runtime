@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Azure.Mobile.Server;
 using Microsoft.Azure.Mobile.Server.Tables;
 using foodtruckaliService.DataObjects;
+using foodtruckaliService.Controllers;
 
 namespace foodtruckaliService.Models
 {
@@ -22,7 +23,7 @@ namespace foodtruckaliService.Models
         {
         } 
 
-        public DbSet<TodoItem> TodoItems { get; set; }
+        public DbSet<FoodTruck> TodoItems { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

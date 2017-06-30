@@ -10,46 +10,44 @@ using System.Collections.Generic;
 
 namespace foodtruckaliService.Controllers
 {
-    public class TodoItemController : TableController<TodoItem>
+    public class FoodTruckController : TableController<FoodTruck>
     {
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
             foodtruckaliContext context = new foodtruckaliContext();
-            DomainManager = new EntityDomainManager<TodoItem>(context, Request);
-        }
-
-        // GET tables/TodoItem
-        public IQueryable<TodoItem> GetAllTodoItems()
-        {
-            return Query();
-        }
-
-        // GET tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959
-        public SingleResult<TodoItem> GetTodoItem(string id)
-        {
-            return Lookup(id);
+            DomainManager = new EntityDomainManager<FoodTruck>(context, Request);
         }
 
 
-        public IQueryable<TodoItem> SearchForFoodTruck(string searchTerm, Point point1,Point point2)
+        [AllowAnonymous]
+        public IQueryable<FoodTruck> GetFoodTruck(string searchTerm, Point point1,Point point2)
         {
-            IQueryable<TodoItem> toReturn = DomainManager.Query().Where(i=> i.IsAvailable);
+            IQueryable<FoodTruck> toReturn = DomainManager.Query().Where(i=> i.IsAvailable);
             return toReturn;
         }
         // PATCH tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959
-        public Task<TodoItem> PatchTodoItem(string id, Delta<TodoItem> patch)
+        public Task<FoodTruck> PutTodoItem(string id, Delta<FoodTruck> patch)
         {
             return UpdateAsync(id, patch);
         }
 
+ //       [Authorize]
         // POST tables/TodoItem
-        public async Task<IHttpActionResult> PostTodoItem(TodoItem item)
+        public async Task<IHttpActionResult> PostTodoItem(FoodTruckRegisterModel FoodTruck)
         {
-            TodoItem current = await InsertAsync(item);
+            var searchResult = DomainManager.Query().Single(i => string.Equals(FoodTruck.Name.ToLower(), i.Name.ToLower()));
+            if (searchResult != null)
+            {
+                //name already used, return error 409
+                return Conflict();
+            }
+            FoodTruck current = await InsertAsync(new Controllers.FoodTruck {Name = FoodTruck.Name,Description=FoodTruck.Description,User=User.Identity.Name});
             return CreatedAtRoute("Tables", new { id = current.Id }, current);
         }
 
+
+        [Authorize]
         // DELETE tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959
         public Task DeleteTodoItem(string id)
         {
