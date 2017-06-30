@@ -30,6 +30,8 @@ namespace foodtruckaliService.Controllers
         {
             return Lookup(id);
         }
+
+
         public IQueryable<TodoItem> SearchForFoodTruck(string searchTerm, Point point1,Point point2)
         {
             IQueryable<TodoItem> toReturn = DomainManager.Query().Where(i=> i.IsAvailable);
