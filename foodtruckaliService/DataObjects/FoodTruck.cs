@@ -1,6 +1,6 @@
 ﻿using Microsoft.Azure.Mobile.Server;
 
-namespace foodtruckaliService.Controllers
+namespace foodtruckaliService.DataObjects
 {
     public class FoodTruck:EntityData
     {
@@ -8,6 +8,7 @@ namespace foodtruckaliService.Controllers
         public string Name { get; set; }
         public string Description { get; set; }
         public bool IsAvailable { get; set; }
-        public Point Coordinates { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
     }
 }
