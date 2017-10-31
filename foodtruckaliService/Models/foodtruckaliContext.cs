@@ -23,7 +23,7 @@ namespace foodtruckaliService.Models
         {
         } 
 
-        public DbSet<FoodTruck> TodoItems { get; set; }
+        public DbSet<FoodTruck> FoodTrucks { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

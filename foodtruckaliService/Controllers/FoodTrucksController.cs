@@ -22,14 +22,14 @@ namespace foodtruckaliService.Controllers
         // GET: api/FoodTrucks
         public IQueryable<FoodTruck> GetTodoItems()
         {
-            return db.TodoItems;
+            return db.FoodTrucks;
         }
 
         // GET: api/FoodTrucks/5
         [ResponseType(typeof(FoodTruck))]
         public IHttpActionResult GetFoodTruck(string id)
         {
-            FoodTruck foodTruck = db.TodoItems.Find(id);
+            FoodTruck foodTruck = db.FoodTrucks.Find(id);
             if (foodTruck == null)
             {
                 return NotFound();
@@ -77,14 +77,14 @@ namespace foodtruckaliService.Controllers
         [ResponseType(typeof(FoodTruck))]
         public IHttpActionResult PostFoodTruck(FoodTruck foodTruck)
         {
-            var searchResult = db.TodoItems.Single(i => string.Equals(foodTruck.Name.ToLower(), i.Name.ToLower()));
+            var searchResult = db.FoodTrucks.Single(i => string.Equals(foodTruck.Name.ToLower(), i.Name.ToLower()));
 
             if (!ModelState.IsValid || searchResult!=null)
             {
                 return BadRequest(ModelState);
             }
 
-            db.TodoItems.Add(foodTruck);
+            db.FoodTrucks.Add(foodTruck);
 
             try
             {
@@ -110,13 +110,13 @@ namespace foodtruckaliService.Controllers
         [ResponseType(typeof(FoodTruck))]
         public IHttpActionResult DeleteFoodTruck(string id)
         {
-            FoodTruck foodTruck = db.TodoItems.Find(id);
+            FoodTruck foodTruck = db.FoodTrucks.Find(id);
             if (foodTruck == null)
             {
                 return NotFound();
             }
 
-            db.TodoItems.Remove(foodTruck);
+            db.FoodTrucks.Remove(foodTruck);
             db.SaveChanges();
 
             return Ok(foodTruck);
@@ -133,7 +133,7 @@ namespace foodtruckaliService.Controllers
 
         private bool FoodTruckExists(string id)
         {
-            return db.TodoItems.Count(e => e.Id == id) > 0;
+            return db.FoodTrucks.Count(e => e.Id == id) > 0;
         }
     }
 }
