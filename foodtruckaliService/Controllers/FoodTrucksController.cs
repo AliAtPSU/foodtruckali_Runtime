@@ -12,6 +12,7 @@ using foodtruckaliService.Models;
 using System.Threading.Tasks;
 using Microsoft.Azure.Mobile.Server.Config;
 using foodtruckaliService.DataObjects;
+using System.Device.Location;
 namespace foodtruckaliService.Controllers
 {
     [MobileAppController]
@@ -26,16 +27,17 @@ namespace foodtruckaliService.Controllers
         }
 
         // GET: api/FoodTrucks/5
-        [ResponseType(typeof(FoodTruck))]
-        public IHttpActionResult GetFoodTruck(string id)
+        [ResponseType(typeof(IQueryable<FoodTruck>))]
+        public IHttpActionResult GetFoodTruck(int range,double latitude,double longitude)
         {
-            FoodTruck foodTruck = db.FoodTrucks.Find(id);
-            if (foodTruck == null)
-            {
-                return NotFound();
-            }
+            
+            var foodTruckList = db.FoodTrucks.Where(x =>
+            
+                range > (new GeoCoordinate(latitude, longitude).GetDistanceTo(new GeoCoordinate(x.Latitude, x.Longitude)))
+            );
 
-            return Ok(foodTruck);
+
+            return Ok(foodTruckList);
         }
 
         // PUT: api/FoodTrucks/5
@@ -74,9 +76,11 @@ namespace foodtruckaliService.Controllers
         }
 
         // POST: api/FoodTrucks
+        [Authorize]
         [ResponseType(typeof(FoodTruck))]
         public IHttpActionResult PostFoodTruck(FoodTruck foodTruck)
         {
+            
             var searchResult = db.FoodTrucks.Single(i => string.Equals(foodTruck.Name.ToLower(), i.Name.ToLower()));
 
             if (!ModelState.IsValid || searchResult!=null)
