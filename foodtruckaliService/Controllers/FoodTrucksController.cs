@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -77,13 +78,13 @@ namespace foodtruckaliService.Controllers
         [ResponseType(typeof(FoodTruck))]
         public IHttpActionResult PostFoodTruck(FoodTruck foodTruck)
         {
-            var searchResult = db.FoodTrucks.Single(i => string.Equals(foodTruck.Name.ToLower(), i.Name.ToLower()));
+            var searchResult = db.FoodTrucks.SingleOrDefault(i => string.Equals(foodTruck.Name.ToLower(), i.Name.ToLower()));
 
             if (!ModelState.IsValid || searchResult!=null)
             {
                 return BadRequest(ModelState);
             }
-
+            foodTruck.Id = Guid.NewGuid().ToString();
             db.FoodTrucks.Add(foodTruck);
 
             try

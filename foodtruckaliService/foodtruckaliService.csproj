@@ -185,6 +185,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="foodtruckaliPublishProfile.PublishSettings" />
     <None Include="Properties\PublishProfiles\foodtruckali - Web Deploy.pubxml" />
   </ItemGroup>
   <ItemGroup>
