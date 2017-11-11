@@ -13,6 +13,10 @@ using foodtruckaliService.Models;
 using System.Threading.Tasks;
 using Microsoft.Azure.Mobile.Server.Config;
 using foodtruckaliService.DataObjects;
+using System.Security.Claims;
+using Microsoft.Azure.Mobile.Server.Authentication;
+using System.Security.Principal;
+
 namespace foodtruckaliService.Controllers
 {
     [MobileAppController]
@@ -21,10 +25,7 @@ namespace foodtruckaliService.Controllers
         private foodtruckaliContext db = new foodtruckaliContext();
 
         // GET: api/FoodTrucks
-        public IQueryable<FoodTruck> GetTodoItems()
-        {
-            return db.FoodTrucks;
-        }
+        
 
         // GET: api/FoodTrucks/5
         [ResponseType(typeof(FoodTruck))]
@@ -37,6 +38,18 @@ namespace foodtruckaliService.Controllers
             }
 
             return Ok(foodTruck);
+        }
+
+        [ResponseType(typeof(IEnumerable<FoodTruck>))]
+        public async Task<IHttpActionResult> GetFoodTruck()
+        {
+            ClaimsPrincipal userClaims = User as ClaimsPrincipal;
+            string provider = userClaims.FindFirst("http://schemas.microsoft.com/identity/claims/identityprovider").Value;
+            string sid = userClaims.FindFirst("stable_sid").Value;
+            ProviderCredentials creds = await this.User.GetAppServiceIdentityAsync<TwitterCredentials>(this.Request);
+            var userAuthType = User.Identity.AuthenticationType;
+            var user = creds.UserClaims;
+            return Ok(provider);
         }
 
         // PUT: api/FoodTrucks/5
@@ -75,15 +88,17 @@ namespace foodtruckaliService.Controllers
         }
 
         // POST: api/FoodTrucks
-        [ResponseType(typeof(FoodTruck))]
-        public IHttpActionResult PostFoodTruck(FoodTruck foodTruck)
+        [ResponseType(typeof(string))]
+        public async Task<IHttpActionResult> PostFoodTruckAsync(FoodTruck foodTruck)
         {
             var searchResult = db.FoodTrucks.SingleOrDefault(i => string.Equals(foodTruck.Name.ToLower(), i.Name.ToLower()));
 
-            if (!ModelState.IsValid || searchResult!=null)
+            if (!ModelState.IsValid || searchResult != null)
             {
                 return BadRequest(ModelState);
             }
+
+
             foodTruck.Id = Guid.NewGuid().ToString();
             db.FoodTrucks.Add(foodTruck);
 
@@ -102,8 +117,8 @@ namespace foodtruckaliService.Controllers
                     throw;
                 }
             }
-
-            return CreatedAtRoute("DefaultApi", new { id = foodTruck.Id }, foodTruck);
+            return Ok("");
+            // return CreatedAtRoute("DefaultApi", new { id = foodTruck.Id }, foodTruck);
         }
 
 
